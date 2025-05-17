@@ -1,0 +1,6 @@
+@RecoverySystem.PatientService_HostAddress = http://localhost:5167
+
+GET {{RecoverySystem.PatientService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

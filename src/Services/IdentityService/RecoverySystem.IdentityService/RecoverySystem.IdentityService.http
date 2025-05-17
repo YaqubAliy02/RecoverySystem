@@ -1,0 +1,6 @@
+@RecoverySystem.IdentityService_HostAddress = http://localhost:5221
+
+GET {{RecoverySystem.IdentityService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
