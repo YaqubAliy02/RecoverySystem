@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /src/Services/IdentityService/RecoverySystem.IdentityService/appsettings.Development.json
+/RecoverySystem.PatientService/appsettings.Development.json
+/src/Services/PatientService/RecoverySystem.PatientService/appsettings.Development.json
