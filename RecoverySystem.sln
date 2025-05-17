@@ -15,13 +15,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.BuildingBlocks", "src\BuildingBlocks\RecoverySystem.BuildingBlocks\RecoverySystem.BuildingBlocks.csproj", "{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PatientService", "PatientService", "{C5902921-957A-4A54-997C-EFCF824D8A0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.PatientService", "src\Services\PatientService\RecoverySystem.PatientService\RecoverySystem.PatientService.csproj", "{56128D40-3914-41E0-9C94-3854AD76A70C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CC3DD372-EAC8-4F27-A30C-7AFAA9FBD24E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -32,6 +33,13 @@ Global
 		{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56128D40-3914-41E0-9C94-3854AD76A70C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56128D40-3914-41E0-9C94-3854AD76A70C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56128D40-3914-41E0-9C94-3854AD76A70C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56128D40-3914-41E0-9C94-3854AD76A70C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{295AE5ED-5C74-4AB9-8BA6-C7B175133F03} = {97586AB1-5998-46B1-A75D-6E74C9F73833}
@@ -39,5 +47,7 @@ Global
 		{CC3DD372-EAC8-4F27-A30C-7AFAA9FBD24E} = {D11F1DAB-9BA2-4845-AFB2-31C7E42C911E}
 		{9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D} = {97586AB1-5998-46B1-A75D-6E74C9F73833}
 		{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
+		{C5902921-957A-4A54-997C-EFCF824D8A0C} = {295AE5ED-5C74-4AB9-8BA6-C7B175133F03}
+		{56128D40-3914-41E0-9C94-3854AD76A70C} = {C5902921-957A-4A54-997C-EFCF824D8A0C}
 	EndGlobalSection
 EndGlobal
