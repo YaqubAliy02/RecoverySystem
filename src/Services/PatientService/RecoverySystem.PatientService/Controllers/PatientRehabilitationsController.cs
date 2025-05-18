@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecoverySystem.PatientService.Data;
-using RecoverySystem.PatientService.DTOs;
 using RecoverySystem.PatientService.DTOs.PatientRehabilitations;
 using RecoverySystem.PatientService.Models;
 using RecoverySystem.PatientService.Services;
