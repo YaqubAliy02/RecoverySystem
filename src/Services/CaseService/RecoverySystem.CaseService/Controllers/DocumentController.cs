@@ -35,7 +35,7 @@ namespace RecoverySystem.CaseService.Controllers
 
             // In a real implementation, you would retrieve the file from your storage service
             // For this example, we'll just return a placeholder response
-            return Ok(new { document.Id, document.FileName, document.FileUrl });
+            return Ok(new { document.Id, document.FileName });
         }
 
         [HttpPost]
