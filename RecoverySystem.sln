@@ -19,6 +19,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PatientService", "PatientSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.PatientService", "src\Services\PatientService\RecoverySystem.PatientService\RecoverySystem.PatientService.csproj", "{56128D40-3914-41E0-9C94-3854AD76A70C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CaseService", "CaseService", "{C5C2455A-5306-41C9-95C8-435E182979C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.CaseService", "src\Services\CaseService\RecoverySystem.CaseService\RecoverySystem.CaseService.csproj", "{D20D305A-5147-4870-A027-00BB63725598}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApiGateway", "WebApiGateway", "{D4F25795-AC66-4FC8-A4CF-D2F338CD59B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.ApiGateway", "WebApiGateway\RecoverySystem.ApiGateway\RecoverySystem.ApiGateway.csproj", "{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.BuildingBlocks.Messaging", "src\BuildingBlocks\RecoverySystem.BuildingBlocks.Messaging\RecoverySystem.BuildingBlocks.Messaging.csproj", "{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.BuildingBlocks.Events", "src\BuildingBlocks\RecoverySystem.BuildingBlocks.Events\RecoverySystem.BuildingBlocks.Events.csproj", "{398874CE-AE63-4E6B-92AA-B23EE48EC857}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F2783F4-C2C0-4BFF-92C0-848A4948E267}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +54,22 @@ Global
 		{56128D40-3914-41E0-9C94-3854AD76A70C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56128D40-3914-41E0-9C94-3854AD76A70C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56128D40-3914-41E0-9C94-3854AD76A70C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D20D305A-5147-4870-A027-00BB63725598}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20D305A-5147-4870-A027-00BB63725598}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20D305A-5147-4870-A027-00BB63725598}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20D305A-5147-4870-A027-00BB63725598}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{398874CE-AE63-4E6B-92AA-B23EE48EC857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{398874CE-AE63-4E6B-92AA-B23EE48EC857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{398874CE-AE63-4E6B-92AA-B23EE48EC857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{398874CE-AE63-4E6B-92AA-B23EE48EC857}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +82,10 @@ Global
 		{C2EEC44D-9366-45E4-9FE0-06645D9A8BF4} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
 		{C5902921-957A-4A54-997C-EFCF824D8A0C} = {295AE5ED-5C74-4AB9-8BA6-C7B175133F03}
 		{56128D40-3914-41E0-9C94-3854AD76A70C} = {C5902921-957A-4A54-997C-EFCF824D8A0C}
+		{C5C2455A-5306-41C9-95C8-435E182979C3} = {295AE5ED-5C74-4AB9-8BA6-C7B175133F03}
+		{D20D305A-5147-4870-A027-00BB63725598} = {C5C2455A-5306-41C9-95C8-435E182979C3}
+		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14} = {D4F25795-AC66-4FC8-A4CF-D2F338CD59B0}
+		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
+		{398874CE-AE63-4E6B-92AA-B23EE48EC857} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,34 @@
+# Base image for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+# Copy BuildingBlocks projects
+COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/RecoverySystem.BuildingBlocks.Messaging.csproj", "BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
+COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Events/RecoverySystem.BuildingBlocks.Events.csproj", "BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
+
+# Copy Patient Service project
+COPY ["Services/PatientService/RecoverySystem.PatientService/RecoverySystem.PatientService.csproj", "Services/PatientService/RecoverySystem.PatientService/"]
+
+# Restore dependencies
+RUN dotnet restore "Services/PatientService/RecoverySystem.PatientService/RecoverySystem.PatientService.csproj"
+
+# Copy all source code
+COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/", "BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
+COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Events/", "BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
+COPY ["Services/PatientService/RecoverySystem.PatientService/", "Services/PatientService/RecoverySystem.PatientService/"]
+
+# Build the project
+WORKDIR "/src/Services/PatientService/RecoverySystem.PatientService"
+RUN dotnet build "RecoverySystem.PatientService.csproj" -c Release -o /app/build
+
+# Publish the application
+FROM build AS publish
+RUN dotnet publish "RecoverySystem.PatientService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Final image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+EXPOSE 80
+EXPOSE 443
+ENTRYPOINT ["dotnet", "RecoverySystem.PatientService.dll"]

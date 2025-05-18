@@ -8,8 +8,8 @@ public class PatientNote
     public DateTime Date { get; set; } = DateTime.UtcNow;
     public string AuthorId { get; set; }
     public string AuthorName { get; set; }
-    public string AuthorAvatar { get; set; }
+    public string? AuthorAvatar { get; set; }
     public string AuthorRole { get; set; }
-    public string Category { get; set; }
+    public string? Category { get; set; }
     public Patient Patient { get; set; }
 }

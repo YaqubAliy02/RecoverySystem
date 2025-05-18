@@ -1,0 +1,129 @@
+services:
+  # ??????????????????????????????????????????????????????????????
+  # Microsoft SQL Server (Linux container)
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: recovery-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Mahbubiy571!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - recovery-network
+    healthcheck:
+      test: >
+        /opt/mssql-tools/bin/sqlcmd
+        -S localhost -U sa -P "Mahbubiy571!"
+        -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ??????????????????????????????????????????????????????????????
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: recovery-rabbitmq
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - recovery-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ??????????????????????????????????????????????????????????????
+  # Identity microservice (ASP.NET Core)
+  identity-service:
+    build:
+      context: .
+      dockerfile: src/Services/IdentityService/RecoverySystem.IdentityService/Dockerfile
+    container_name: recovery-identity-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=RecoverySystem.Identity;User Id=sa;Password=Mahbubiy571!;TrustServerCertificate=True
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5001:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - recovery-network
+
+  # ??????????????????????????????????????????????????????????????
+  # Patient microservice (ASP.NET Core)
+  patient-service:
+    build:
+      context: .
+      dockerfile: src/Services/PatientService/RecoverySystem.PatientService/Dockerfile
+    container_name: recovery-patient-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=RecoverySystem.Patient;User Id=sa;Password=Mahbubiy571!;TrustServerCertificate=True
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5002:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    networks:
+      - recovery-network
+
+  # ??????????????????????????????????????????????????????????????
+  # Next.js frontend
+  frontend:
+    image: node:18-alpine
+    container_name: recovery-frontend
+    working_dir: /app
+    volumes:
+      - ./src/Web/Frontend:/app
+    command: >
+      sh -c "npm install && npm run dev"
+    environment:
+      # inside the container, talk to the identity service on the Docker network:
+      - NEXT_PUBLIC_API_URL=http://recovery-identity-service/api
+    ports:
+      - "3000:3000"
+    networks:
+      - recovery-network
+
+# ??????????????????????????????????????????????????????????????
+networks:
+  recovery-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+  rabbitmq_data:

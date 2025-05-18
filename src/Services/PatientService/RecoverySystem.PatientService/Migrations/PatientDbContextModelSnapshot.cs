@@ -28,7 +28,6 @@ namespace RecoverySystem.PatientService.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AuthorAvatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AuthorId")
@@ -44,7 +43,6 @@ namespace RecoverySystem.PatientService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
@@ -71,14 +69,12 @@ namespace RecoverySystem.PatientService.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -96,7 +92,6 @@ namespace RecoverySystem.PatientService.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MedicalHistory")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Medications")
@@ -124,6 +119,105 @@ namespace RecoverySystem.PatientService.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientRecommendation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedByName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("PatientRecommendations");
+                });
+
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientRehabilitation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AssignedToId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AssignedToName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PatientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("PatientRehabilitations");
                 });
 
             modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientVital", b =>
@@ -164,10 +258,74 @@ namespace RecoverySystem.PatientService.Migrations
                     b.ToTable("PatientVitals");
                 });
 
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.RehabilitationExercise", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FrequencyPerWeek")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Instructions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RehabilitationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RehabilitationId");
+
+                    b.ToTable("RehabilitationExercises");
+                });
+
             modelBuilder.Entity("PatientNote", b =>
                 {
                     b.HasOne("RecoverySystem.PatientService.Models.Patient", "Patient")
                         .WithMany("Notes")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientRecommendation", b =>
+                {
+                    b.HasOne("RecoverySystem.PatientService.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientRehabilitation", b =>
+                {
+                    b.HasOne("RecoverySystem.PatientService.Models.Patient", "Patient")
+                        .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -186,11 +344,27 @@ namespace RecoverySystem.PatientService.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.RehabilitationExercise", b =>
+                {
+                    b.HasOne("RecoverySystem.PatientService.Models.PatientRehabilitation", "Rehabilitation")
+                        .WithMany("Exercises")
+                        .HasForeignKey("RehabilitationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rehabilitation");
+                });
+
             modelBuilder.Entity("RecoverySystem.PatientService.Models.Patient", b =>
                 {
                     b.Navigation("Notes");
 
                     b.Navigation("Vitals");
+                });
+
+            modelBuilder.Entity("RecoverySystem.PatientService.Models.PatientRehabilitation", b =>
+                {
+                    b.Navigation("Exercises");
                 });
 #pragma warning restore 612, 618
         }
