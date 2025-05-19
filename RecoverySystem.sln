@@ -9,21 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{29
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{D11F1DAB-9BA2-4845-AFB2-31C7E42C911E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.IdentityService", "src\Services\IdentityService\RecoverySystem.IdentityService\RecoverySystem.IdentityService.csproj", "{CC3DD372-EAC8-4F27-A30C-7AFAA9FBD24E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.IdentityService", "src\Services\IdentityService\RecoverySystem.IdentityService\Recovery.IdentityService.csproj", "{CC3DD372-EAC8-4F27-A30C-7AFAA9FBD24E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PatientService", "PatientService", "{C5902921-957A-4A54-997C-EFCF824D8A0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.PatientService", "src\Services\PatientService\RecoverySystem.PatientService\RecoverySystem.PatientService.csproj", "{56128D40-3914-41E0-9C94-3854AD76A70C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.PatientService", "src\Services\PatientService\RecoverySystem.PatientService\Recovery.PatientService.csproj", "{56128D40-3914-41E0-9C94-3854AD76A70C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CaseService", "CaseService", "{C5C2455A-5306-41C9-95C8-435E182979C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.CaseService", "src\Services\CaseService\RecoverySystem.CaseService\RecoverySystem.CaseService.csproj", "{D20D305A-5147-4870-A027-00BB63725598}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApiGateway", "WebApiGateway", "{D4F25795-AC66-4FC8-A4CF-D2F338CD59B0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.ApiGateway", "WebApiGateway\RecoverySystem.ApiGateway\RecoverySystem.ApiGateway.csproj", "{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.CaseService", "src\Services\CaseService\RecoverySystem.CaseService\Recovery.CaseService.csproj", "{D20D305A-5147-4870-A027-00BB63725598}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.BuildingBlocks.Messaging", "src\BuildingBlocks\RecoverySystem.BuildingBlocks.Messaging\RecoverySystem.BuildingBlocks.Messaging.csproj", "{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}"
 EndProject
@@ -36,17 +32,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonitoringService", "MonitoringService", "{FC6AE872-C126-45CE-AA0E-594429D2C189}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.MonitoringService", "src\Services\MonitoringService\RecoverySystem.MonitoringService\RecoverySystem.MonitoringService.csproj", "{35FFA848-278F-431D-BC79-1F3EFB97D00A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.MonitoringService", "src\Services\MonitoringService\RecoverySystem.MonitoringService\Recovery.MonitoringService.csproj", "{35FFA848-278F-431D-BC79-1F3EFB97D00A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "NotificationService", "{3E0B95FC-4756-4E8D-A563-987DE047481B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.NotificationService", "src\Services\NotificationService\RecoverySystem.NotificationService\RecoverySystem.NotificationService.csproj", "{BDE4EC4F-F975-4705-A169-06BFAE9B43E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.NotificationService", "src\Services\NotificationService\RecoverySystem.NotificationService\Recovery.NotificationService.csproj", "{BDE4EC4F-F975-4705-A169-06BFAE9B43E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.RehabilitationService", "src\Services\RehabilitationService\RecoverySystem.RehabilitationService.csproj", "{6ACB576C-C76B-4E51-9D4E-EDA6A5200612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.RehabilitationService", "src\Services\RehabilitationService\Recovery.RehabilitationService.csproj", "{6ACB576C-C76B-4E51-9D4E-EDA6A5200612}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RehabilitationService", "RehabilitationService", "{A9C07E04-5BC5-4727-8BEF-9FD9725A92BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverySystem.RecommendationService", "src\Services\RecommendationService\RecoverySystem.RecommendationService.csproj", "{836D6D9B-2DE5-49A2-91BE-98A73FC7CC77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recovery.RecommendationService", "src\Services\RecommendationService\Recovery.RecommendationService.csproj", "{836D6D9B-2DE5-49A2-91BE-98A73FC7CC77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RecommendationService", "RecommendationService", "{553ED6B9-61B3-4EED-B2CA-6BA812D85549}"
 EndProject
@@ -68,10 +64,6 @@ Global
 		{D20D305A-5147-4870-A027-00BB63725598}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D20D305A-5147-4870-A027-00BB63725598}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D20D305A-5147-4870-A027-00BB63725598}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -109,7 +101,6 @@ Global
 		{56128D40-3914-41E0-9C94-3854AD76A70C} = {C5902921-957A-4A54-997C-EFCF824D8A0C}
 		{C5C2455A-5306-41C9-95C8-435E182979C3} = {295AE5ED-5C74-4AB9-8BA6-C7B175133F03}
 		{D20D305A-5147-4870-A027-00BB63725598} = {C5C2455A-5306-41C9-95C8-435E182979C3}
-		{67DCD94B-F7D6-4CD3-A6D7-971FA85B3E14} = {D4F25795-AC66-4FC8-A4CF-D2F338CD59B0}
 		{AF59EAA3-C812-45DC-810A-9E9EFC19CC77} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
 		{398874CE-AE63-4E6B-92AA-B23EE48EC857} = {9ECD2E24-22A5-4F8A-A5AD-EE29D3B4642D}
 		{FC6AE872-C126-45CE-AA0E-594429D2C189} = {295AE5ED-5C74-4AB9-8BA6-C7B175133F03}
