@@ -14,11 +14,16 @@ public class CasesController : ControllerBase
 {
     private readonly ICaseService _caseService;
     private readonly ILogger<CasesController> _logger;
+    private readonly IS3StorageService _s3StorageService;
 
-    public CasesController(ICaseService caseService, ILogger<CasesController> logger)
+    public CasesController(
+        ICaseService caseService,
+        ILogger<CasesController> logger,
+        IS3StorageService s3StorageService)
     {
         _caseService = caseService ?? throw new ArgumentNullException(nameof(caseService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _s3StorageService = s3StorageService;
     }
 
     [HttpGet]
@@ -147,31 +152,30 @@ public class CasesController : ControllerBase
         _logger.LogInformation("Uploading document for case with ID {CaseId}", id);
 
         if (file == null || file.Length == 0)
-        {
             return BadRequest("No file uploaded");
-        }
 
-        // TODO: Implement file storage logic (e.g., save to disk, S3, Azure Blob Storage)
-        // For now, we'll just create a document record with placeholder file path
+        var currentUserId = GetCurrentUserId();
+        var fileUrl = await _s3StorageService.UploadFileAsync(file, $"case-documents/{id}");
 
         var document = new CaseDocument
         {
             FileName = file.FileName,
             ContentType = file.ContentType,
             FileSize = file.Length,
-            FilePath = $"/documents/{Guid.NewGuid()}_{file.FileName}" // Placeholder path
+            FilePath = fileUrl, // stored as full S3 URL
+            CaseId = id,
+            UploadedById = currentUserId,
+            UploadedAt = DateTime.UtcNow
         };
 
-        var currentUserId = GetCurrentUserId();
         var uploadedDocument = await _caseService.UploadDocumentAsync(id, document, currentUserId);
 
         if (uploadedDocument == null)
-        {
             return NotFound();
-        }
 
         return Ok(uploadedDocument);
     }
+
 
     private Guid GetCurrentUserId()
     {

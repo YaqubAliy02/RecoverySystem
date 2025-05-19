@@ -10,11 +10,7 @@ public class CaseDocument
     public string FilePath { get; set; }
     public long FileSize { get; set; }
     public DateTime UploadedAt { get; set; }
-
-    // Foreign keys
     public Guid CaseId { get; set; }
     public Guid UploadedById { get; set; }
-
-    // Navigation properties
     public virtual Case Case { get; set; }
 }

@@ -27,15 +27,19 @@ namespace RecoverySystem.CaseService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDocument(string id)
         {
-            var document = await _context.CaseDocuments.FindAsync(id);
+            var document = await _context.CaseDocuments.FindAsync(Guid.Parse(id));
             if (document == null)
-            {
                 return NotFound();
-            }
 
-            // In a real implementation, you would retrieve the file from your storage service
-            // For this example, we'll just return a placeholder response
-            return Ok(new { document.Id, document.FileName });
+            return Ok(new
+            {
+                document.Id,
+                document.FileName,
+                document.FilePath,
+                document.ContentType,
+                document.FileSize,
+                document.UploadedAt
+            });
         }
 
         [HttpPost]

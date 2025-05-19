@@ -9,6 +9,7 @@
   <ItemGroup>
 	  <PackageReference Include="AutoMapper" Version="12.0.1" />
 	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+	  <PackageReference Include="AWSSDK.S3" Version="4.0.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.5">
@@ -21,7 +22,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\BuildingBlocks\RecoverySystem.BuildingBlocks.Messaging\RecoverySystem.BuildingBlocks.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\RecoverySystem.BuildingBlocks.Events\RecoverySystem.BuildingBlocks.Events.csproj" />
-		<ProjectReference Include="..\..\IdentityService\RecoverySystem.IdentityService\RecoverySystem.IdentityService.csproj" />
 	</ItemGroup>
 
 </Project>

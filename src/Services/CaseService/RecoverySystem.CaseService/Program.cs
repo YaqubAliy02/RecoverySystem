@@ -27,6 +27,8 @@ builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<EventPublisher>();
 builder.Services.AddHostedService<EventConsumerService>();
 
+builder.Services.AddSingleton<IS3StorageService, S3StorageService>();
+
 // Add JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
