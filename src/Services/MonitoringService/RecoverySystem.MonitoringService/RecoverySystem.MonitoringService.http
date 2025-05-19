@@ -1,0 +1,6 @@
+@RecoverySystem.MonitoringService_HostAddress = http://localhost:5048
+
+GET {{RecoverySystem.MonitoringService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
