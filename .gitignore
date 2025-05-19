@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /src/Services/PatientService/RecoverySystem.PatientService/appsettings.Development.json
 /src/Services/CaseService/RecoverySystem.CaseService/appsettings.Development.json
 /RecoverySystem.NotificationService/appsettings.Development.json
+/src/Services/NotificationService/RecoverySystem.NotificationService/appsettings.Development.json
