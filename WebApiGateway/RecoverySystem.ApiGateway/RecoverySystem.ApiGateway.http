@@ -1,6 +1,0 @@
-@RecoverySystem.ApiGateway_HostAddress = http://localhost:5110
-
-GET {{RecoverySystem.ApiGateway_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

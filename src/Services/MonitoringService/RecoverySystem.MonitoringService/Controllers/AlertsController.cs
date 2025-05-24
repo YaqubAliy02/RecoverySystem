@@ -54,7 +54,6 @@ public class AlertsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateAlert([FromBody] CreateAlertDto createDto)
     {
         if (!ModelState.IsValid)

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RecoverySystem.MonitoringService.DTOs;
 using RecoverySystem.MonitoringService.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace RecoverySystem.MonitoringService.Controllers;
@@ -58,7 +59,7 @@ public class VitalMonitoringsController : ControllerBase
             return Unauthorized(new { message = "User not authenticated" });
         }
 
-        var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown User";
+        var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value ?? "Unknown User";
 
         var vitalMonitoring = await _monitoringService.RecordVitalMonitoringAsync(
             createDto,

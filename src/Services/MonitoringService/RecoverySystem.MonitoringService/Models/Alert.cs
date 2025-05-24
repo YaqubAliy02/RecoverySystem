@@ -13,8 +13,8 @@ public class Alert
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ResolvedAt { get; set; }
     public Guid? ResolvedById { get; set; }
-    public string ResolvedByName { get; set; }
-    public string ResolutionNotes { get; set; }
+    public string? ResolvedByName { get; set; }
+    public string? ResolutionNotes { get; set; }
 }
 
 public enum AlertType

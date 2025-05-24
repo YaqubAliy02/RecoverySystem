@@ -162,7 +162,7 @@ namespace RecoverySystem.MonitoringService.Services
                         Type = AlertType.VitalSigns,
                         Severity = threshold.Severity,
                         Message = message,
-                        Details = $"Recorded value: {value}. Threshold: {threshold.LowerThreshold}-{threshold.UpperThreshold}. Recorded at {vitalMonitoring.Timestamp}."
+                        Details = $"Recorded value: {value}. Threshold: {threshold.LowerThreshold}-{threshold.UpperThreshold}. Recorded at {vitalMonitoring.Timestamp}.",
                     };
 
                     await _alertService.CreateAlertAsync(alertDto);
