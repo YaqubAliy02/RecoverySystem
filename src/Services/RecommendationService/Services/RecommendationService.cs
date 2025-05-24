@@ -97,6 +97,7 @@ namespace RecoverySystem.RecommendationService.Services
             recommendation.CreatedById = currentUserId;
             recommendation.CreatedByName = currentUserName;
             recommendation.CreatedAt = DateTime.UtcNow;
+            recommendation.ApprovedByName = "";
 
             await _dbContext.Recommendations.AddAsync(recommendation);
             await _dbContext.SaveChangesAsync();

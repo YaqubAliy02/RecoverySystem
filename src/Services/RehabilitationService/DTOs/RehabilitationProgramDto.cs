@@ -29,7 +29,7 @@ namespace RecoverySystem.RehabilitationService.DTOs
         public string Description { get; set; }
         public Guid PatientId { get; set; }
         public string PatientName { get; set; }
-        public Guid CaseId { get; set; }
+        public Guid? CaseId { get; set; }
         public Guid AssignedToId { get; set; }
         public string AssignedToName { get; set; }
         public DateTime StartDate { get; set; }

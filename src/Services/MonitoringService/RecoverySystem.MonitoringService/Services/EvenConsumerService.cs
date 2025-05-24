@@ -73,6 +73,13 @@ namespace RecoverySystem.MonitoringService.Services
         {
             _logger.LogInformation("Received PatientCreatedEvent for patient {PatientId}", @event.PatientId);
 
+            // Defensive: check PatientId
+            if (string.IsNullOrWhiteSpace(@event.PatientId) || !Guid.TryParse(@event.PatientId, out var patientGuid))
+            {
+                _logger.LogError("Invalid or missing PatientId in PatientCreatedEvent: '{PatientId}'", @event.PatientId);
+                return;
+            }
+
             try
             {
                 // Create default threshold configurations for the new patient
@@ -88,7 +95,7 @@ namespace RecoverySystem.MonitoringService.Services
                     UpperThreshold = 100,
                     Severity = Models.AlertSeverity.Medium,
                     IsGlobal = false,
-                    PatientId = Guid.Parse(@event.PatientId)
+                    PatientId = patientGuid
                 });
 
                 // Temperature thresholds (36.1-37.2 °C)
@@ -100,7 +107,7 @@ namespace RecoverySystem.MonitoringService.Services
                     UpperThreshold = 37.2,
                     Severity = Models.AlertSeverity.Medium,
                     IsGlobal = false,
-                    PatientId = Guid.Parse(@event.PatientId)
+                    PatientId = patientGuid
                 });
 
                 // Respiratory rate thresholds (12-20 breaths per minute)
@@ -112,7 +119,7 @@ namespace RecoverySystem.MonitoringService.Services
                     UpperThreshold = 20,
                     Severity = Models.AlertSeverity.Medium,
                     IsGlobal = false,
-                    PatientId = Guid.Parse(@event.PatientId)
+                    PatientId = patientGuid
                 });
 
                 // Oxygen saturation thresholds (95-100%)
@@ -124,7 +131,7 @@ namespace RecoverySystem.MonitoringService.Services
                     UpperThreshold = 100,
                     Severity = Models.AlertSeverity.High,
                     IsGlobal = false,
-                    PatientId = Guid.Parse(@event.PatientId)
+                    PatientId = patientGuid
                 });
 
                 // Pain level thresholds (0-3 out of 10)
@@ -136,7 +143,7 @@ namespace RecoverySystem.MonitoringService.Services
                     UpperThreshold = 3,
                     Severity = Models.AlertSeverity.Low,
                     IsGlobal = false,
-                    PatientId = Guid.Parse(@event.PatientId)
+                    PatientId = patientGuid
                 });
 
                 _logger.LogInformation("Successfully created default threshold configurations for patient {PatientId}", @event.PatientId);

@@ -20,7 +20,7 @@ public class Recommendation
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public Guid? ApprovedById { get; set; }
-    public string ApprovedByName { get; set; }
+    public string? ApprovedByName { get; set; }
     public DateTime? ApprovedAt { get; set; }
     public string Notes { get; set; }
 }

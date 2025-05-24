@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecoverySystem.RecommendationService.DTOs;
 using RecoverySystem.RecommendationService.Models;
 using RecoverySystem.RecommendationService.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace RecoverySystem.RecommendationService.Controllers
@@ -77,7 +78,7 @@ namespace RecoverySystem.RecommendationService.Controllers
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
-            var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown User";
+            var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value ?? "Unknown User";
 
             var recommendation = await _recommendationService.CreateRecommendationAsync(
                 createDto,
@@ -119,7 +120,7 @@ namespace RecoverySystem.RecommendationService.Controllers
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
-            var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown User";
+            var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value ?? "Unknown User";
 
             var recommendation = await _recommendationService.ApproveRecommendationAsync(
                 id,

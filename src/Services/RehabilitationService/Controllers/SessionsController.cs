@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecoverySystem.RehabilitationService.DTOs;
 using RecoverySystem.RehabilitationService.Services;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -74,7 +75,7 @@ namespace RecoverySystem.RehabilitationService.Controllers
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
-            var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Unknown User";
+            var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value ?? "Unknown User";
 
             var session = await _rehabilitationService.UpdateSessionAsync(
                 id,

@@ -16,7 +16,7 @@ namespace RecoverySystem.RehabilitationService.Models
         public int FatigueLevel { get; set; }
         public int SatisfactionLevel { get; set; }
         public Guid? SupervisedById { get; set; }
-        public string SupervisedByName { get; set; }
+        public string? SupervisedByName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }

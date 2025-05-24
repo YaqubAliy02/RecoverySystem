@@ -126,42 +126,54 @@ namespace RecoverySystem.RehabilitationService.Services
 
         private async Task HandleRecommendationCreatedEvent(RecommendationCreatedEvent @event)
         {
-            _logger.LogInformation("Received RecommendationCreatedEvent for recommendation {RecommendationId}", @event.RecommendationId);
-
-            // If recommendation type is related to rehabilitation, create a rehabilitation program
-            if (@event.Type.ToLower().Contains("rehabilitation") || @event.Type.ToLower().Contains("exercise"))
+            // Defensive: Validate all GUIDs before parsing (except CaseId can be optional)
+            if (string.IsNullOrWhiteSpace(@event.PatientId) || !Guid.TryParse(@event.PatientId, out var patientGuid))
             {
-                try
-                {
-                    using var scope = _serviceProvider.CreateScope();
-                    var rehabilitationService = scope.ServiceProvider.GetRequiredService<IRehabilitationService>();
-
-                    // Create a new rehabilitation program based on the recommendation
-                    var createDto = new CreateRehabilitationProgramDto
-                    {
-                        Title = $"Rehabilitation Program: {@event.Title}",
-                        Description = @event.Description,
-                        PatientId = Guid.Parse(@event.PatientId),
-                        PatientName = @event.PatientName,
-                        CaseId = Guid.Parse(@event.CaseId),
-                        AssignedToId = Guid.Parse(@event.CreatedById),
-                        AssignedToName = @event.CreatedByName,
-                        StartDate = DateTime.UtcNow.AddDays(1), // Start tomorrow
-                        EndDate = DateTime.UtcNow.AddDays(30), // 30-day program by default
-                        Notes = $"Created automatically based on recommendation: {@event.RecommendationId}"
-                    };
-
-                    var program = await rehabilitationService.CreateRehabilitationProgramAsync(createDto);
-
-                    _logger.LogInformation("Created rehabilitation program {ProgramId} based on recommendation {RecommendationId}",
-                        program.Id, @event.RecommendationId);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error processing RecommendationCreatedEvent for recommendation {RecommendationId}", @event.RecommendationId);
-                    throw;
-                }
+                _logger.LogError("Invalid or missing PatientId in RecommendationCreatedEvent: '{PatientId}'", @event.PatientId);
+                return;
             }
+            if (string.IsNullOrWhiteSpace(@event.CreatedById) || !Guid.TryParse(@event.CreatedById, out var assignedToGuid))
+            {
+                _logger.LogError("Invalid or missing CreatedById in RecommendationCreatedEvent: '{CreatedById}'", @event.CreatedById);
+                return;
+            }
+
+            // CaseId is optional
+            Guid? caseGuid = null;
+            if (!string.IsNullOrWhiteSpace(@event.CaseId) && Guid.TryParse(@event.CaseId, out var tmpCaseGuid))
+            {
+                caseGuid = tmpCaseGuid;
+            } // else, caseGuid stays null
+
+            try
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var rehabilitationService = scope.ServiceProvider.GetRequiredService<IRehabilitationService>();
+
+                var createDto = new CreateRehabilitationProgramDto
+                {
+                    Title = $"Rehabilitation Program: {@event.Title}",
+                    Description = @event.Description,
+                    PatientId = patientGuid,
+                    PatientName = @event.PatientName,
+                    CaseId = caseGuid,
+                    AssignedToId = assignedToGuid,
+                    AssignedToName = @event.CreatedByName,
+                    StartDate = DateTime.UtcNow.AddDays(1),
+                    EndDate = DateTime.UtcNow.AddDays(30),
+                    Notes = $"Created automatically based on recommendation: {@event.RecommendationId}"
+                };
+
+                var program = await rehabilitationService.CreateRehabilitationProgramAsync(createDto);
+
+                _logger.LogInformation("Created rehabilitation program {ProgramId} based on recommendation {RecommendationId}",
+                    program.Id, @event.RecommendationId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing RecommendationCreatedEvent for recommendation {RecommendationId}", @event.RecommendationId);
+            }
+
         }
     }
 }
