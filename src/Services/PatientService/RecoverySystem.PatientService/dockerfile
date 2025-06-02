@@ -1,34 +1,46 @@
-# Base image for building
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy BuildingBlocks projects
-COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/RecoverySystem.BuildingBlocks.Messaging.csproj", "BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
-COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Events/RecoverySystem.BuildingBlocks.Events.csproj", "BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
+# --- IMPORTANT: Ensure you have a .dockerignore file in your RecoverySystem directory --- 
+# --- (the directory where you run docker-compose build) --- 
+# --- that includes at least the following lines: --- 
+# **/bin
+# **/obj
+# --- This prevents copying build artifacts from your Windows host into the Linux container --- 
 
-# Copy Patient Service project
-COPY ["Services/PatientService/RecoverySystem.PatientService/RecoverySystem.PatientService.csproj", "Services/PatientService/RecoverySystem.PatientService/"]
+# Copy only the necessary project files for restore
+# Copy them into the directory structure they will have after the final COPY .
+COPY ["src/Services/PatientService/RecoverySystem.PatientService/Recovery.PatientService.csproj", "src/Services/PatientService/RecoverySystem.PatientService/"]
+COPY ["src/BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/RecoverySystem.BuildingBlocks.Messaging.csproj", "src/BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
+COPY ["src/BuildingBlocks/RecoverySystem.BuildingBlocks.Events/RecoverySystem.BuildingBlocks.Events.csproj", "src/BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
+# Add COPY lines for any other dependent .csproj files here
 
-# Restore dependencies
-RUN dotnet restore "Services/PatientService/RecoverySystem.PatientService/RecoverySystem.PatientService.csproj"
+# If you have a NuGet.config at the root (RecoverySystem directory), copy it:
+# COPY ["NuGet.config", "."]
 
-# Copy all source code
-COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/", "BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
-COPY ["BuildingBlocks/RecoverySystem.BuildingBlocks.Events/", "BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
-COPY ["Services/PatientService/RecoverySystem.PatientService/", "Services/PatientService/RecoverySystem.PatientService/"]
+# Restore dependencies for the specific service project
+# This uses the .csproj file copied above
+RUN dotnet restore "src/Services/PatientService/RecoverySystem.PatientService/Recovery.PatientService.csproj"
 
-# Build the project
-WORKDIR "/src/Services/PatientService/RecoverySystem.PatientService"
-RUN dotnet build "RecoverySystem.PatientService.csproj" -c Release -o /app/build
+# Copy the rest of the application code
+# The .dockerignore file (mentioned above) is crucial here!
+COPY . .
 
-# Publish the application
+# Build the specific service
+# Set the WORKDIR to the final location of the project source code after COPY . .
+WORKDIR /src/src/Services/PatientService/RecoverySystem.PatientService
+RUN dotnet build "Recovery.PatientService.csproj" -c Release -o /app/build --no-restore
+
+# Stage 2: Publish
 FROM build AS publish
-RUN dotnet publish "RecoverySystem.PatientService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+# WORKDIR is inherited from the previous stage
+RUN dotnet publish "Recovery.PatientService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Final image
+# Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 80
-EXPOSE 443
-ENTRYPOINT ["dotnet", "RecoverySystem.PatientService.dll"]
+ENTRYPOINT ["dotnet", "Recovery.PatientService.dll"]
+

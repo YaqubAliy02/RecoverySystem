@@ -1,35 +1,28 @@
-services:
-  # ??????????????????????????????????????????????????????????????
-  # Microsoft SQL Server (Linux container)
+﻿services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: recovery-sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Mahbubiy571!
+      - SA_PASSWORD=${MSSQL_SA_PASSWORD}
     ports:
-      - "1433:1433"
+      - "11433:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
       - recovery-network
     healthcheck:
-      test: >
-        /opt/mssql-tools/bin/sqlcmd
-        -S localhost -U sa -P "Mahbubiy571!"
-        -Q "SELECT 1" -b -o /dev/null
-      interval: 10s
-      timeout: 5s
-      retries: 5
+        test: ["CMD-SHELL", "pgrep sqlservr || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 10
 
-  # ??????????????????????????????????????????????????????????????
-  # RabbitMQ
   rabbitmq:
     image: rabbitmq:3.12-management
     container_name: recovery-rabbitmq
     ports:
-      - "5672:5672"    # AMQP
-      - "15672:15672"  # Management UI
+      - "25672:5672"
+      - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
@@ -38,13 +31,11 @@ services:
     networks:
       - recovery-network
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
+      test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # ??????????????????????????????????????????????????????????????
-  # Identity microservice (ASP.NET Core)
   identity-service:
     build:
       context: .
@@ -53,7 +44,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=RecoverySystem.Identity;User Id=sa;Password=Mahbubiy571!;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=${IDENTITY_DB}
       - Jwt__Key=YourSuperSecretKey12345678901234567890
       - Jwt__Issuer=RecoverySystem
       - Jwt__Audience=RecoverySystemClients
@@ -62,17 +53,16 @@ services:
       - RabbitMQ__UserName=guest
       - RabbitMQ__Password=guest
     ports:
-      - "5001:80"
+      - "5001:5001"
+    networks:
+      - recovery-network
     depends_on:
       sqlserver:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    networks:
-      - recovery-network
+    restart: on-failure
 
-  # ??????????????????????????????????????????????????????????????
-  # Patient microservice (ASP.NET Core)
   patient-service:
     build:
       context: .
@@ -81,7 +71,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=RecoverySystem.Patient;User Id=sa;Password=Mahbubiy571!;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=${PATIENT_DB}
       - Jwt__Key=YourSuperSecretKey12345678901234567890
       - Jwt__Issuer=RecoverySystem
       - Jwt__Audience=RecoverySystemClients
@@ -90,7 +80,9 @@ services:
       - RabbitMQ__UserName=guest
       - RabbitMQ__Password=guest
     ports:
-      - "5002:80"
+      - "5002:5002"
+    networks:
+      - recovery-network
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -98,28 +90,153 @@ services:
         condition: service_healthy
       identity-service:
         condition: service_started
-    networks:
-      - recovery-network
+    restart: on-failure
 
-  # ??????????????????????????????????????????????????????????????
-  # Next.js frontend
-  frontend:
-    image: node:18-alpine
-    container_name: recovery-frontend
-    working_dir: /app
-    volumes:
-      - ./src/Web/Frontend:/app
-    command: >
-      sh -c "npm install && npm run dev"
+  case-service:
+    build:
+      context: .
+      dockerfile: src/Services/CaseService/RecoverySystem.CaseService/Dockerfile
+    container_name: recovery-case-service
     environment:
-      # inside the container, talk to the identity service on the Docker network:
-      - NEXT_PUBLIC_API_URL=http://recovery-identity-service/api
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=${CASE_DB}
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
     ports:
-      - "3000:3000"
+      - "5003:5003"
     networks:
       - recovery-network
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    restart: on-failure
 
-# ??????????????????????????????????????????????????????????????
+  monitoring-service:
+    build:
+      context: .
+      dockerfile: src/Services/MonitoringService/RecoverySystem.MonitoringService/Dockerfile
+    container_name: recovery-monitoring-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=${MONITORING_DB}
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5004:5004"
+    networks:
+      - recovery-network
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    restart: on-failure
+
+  # notification-service:
+  #   build:
+  #     context: .
+  #     dockerfile: src/Services/NotificationService/RecoverySystem.NotificationService/Dockerfile
+  #   container_name: recovery-notification-service
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://+:80
+  #     - ConnectionStrings__DefaultConnection=${NOTIFICATION_DB}
+  #     - Jwt__Key=YourSuperSecretKey12345678901234567890
+  #     - Jwt__Issuer=RecoverySystem
+  #     - Jwt__Audience=RecoverySystemClients
+  #     - Jwt__ExpireDays=30
+  #     - RabbitMQ__HostName=rabbitmq
+  #     - RabbitMQ__UserName=guest
+  #     - RabbitMQ__Password=guest
+  #   ports:
+  #     - "5005:5005"
+  #   networks:
+  #     - recovery-network
+  #   depends_on:
+  #     sqlserver:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     identity-service:
+  #       condition: service_started
+  #   restart: on-failure
+
+  rehabilitation-service:
+    build:
+      context: .
+      dockerfile: src/Services/RehabilitationService/Dockerfile
+    container_name: recovery-rehabilitation-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=${REHABILITATION_DB}
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5006:5006"
+    networks:
+      - recovery-network
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    restart: on-failure
+
+  recommendation-service:
+    build:
+      context: .
+      dockerfile: src/Services/RecommendationService/Dockerfile
+    container_name: recovery-recommendation-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=${RECOMMENDATION_DB}
+      - Jwt__Key=YourSuperSecretKey12345678901234567890
+      - Jwt__Issuer=RecoverySystem
+      - Jwt__Audience=RecoverySystemClients
+      - Jwt__ExpireDays=30
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5007:5007"
+    networks:
+      - recovery-network
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+    restart: on-failure
+
 networks:
   recovery-network:
     driver: bridge
@@ -127,3 +244,4 @@ networks:
 volumes:
   sqlserver_data:
   rabbitmq_data:
+

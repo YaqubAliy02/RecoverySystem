@@ -1,23 +1,46 @@
-# Base image for building
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore dependencies
-COPY ["RecoverySystem.CaseService.csproj", "./"]
-RUN dotnet restore "RecoverySystem.CaseService.csproj"
+# --- IMPORTANT: Ensure you have a .dockerignore file in your RecoverySystem directory --- 
+# --- (the directory where you run docker-compose build) --- 
+# --- that includes at least the following lines: --- 
+# **/bin
+# **/obj
+# --- This prevents copying build artifacts from your Windows host into the Linux container --- 
 
-# Copy all files and build
+# Copy only the necessary project files for restore
+# Copy them into the directory structure they will have after the final COPY .
+COPY ["src/Services/CaseService/RecoverySystem.CaseService/Recovery.CaseService.csproj", "src/Services/CaseService/RecoverySystem.CaseService/"]
+COPY ["src/BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/RecoverySystem.BuildingBlocks.Messaging.csproj", "src/BuildingBlocks/RecoverySystem.BuildingBlocks.Messaging/"]
+COPY ["src/BuildingBlocks/RecoverySystem.BuildingBlocks.Events/RecoverySystem.BuildingBlocks.Events.csproj", "src/BuildingBlocks/RecoverySystem.BuildingBlocks.Events/"]
+# Add COPY lines for any other dependent .csproj files here
+
+# If you have a NuGet.config at the root (RecoverySystem directory), copy it:
+# COPY ["NuGet.config", "."]
+
+# Restore dependencies for the specific service project
+# This uses the .csproj file copied above
+RUN dotnet restore "src/Services/CaseService/RecoverySystem.CaseService/Recovery.CaseService.csproj"
+
+# Copy the rest of the application code
+# The .dockerignore file (mentioned above) is crucial here!
 COPY . .
-RUN dotnet build "RecoverySystem.CaseService.csproj" -c Release -o /app/build
 
-# Publish the application
+# Build the specific service
+# Set the WORKDIR to the final location of the project source code after COPY . .
+WORKDIR /src/src/Services/CaseService/RecoverySystem.CaseService
+RUN dotnet build "Recovery.CaseService.csproj" -c Release -o /app/build --no-restore
+
+# Stage 2: Publish
 FROM build AS publish
-RUN dotnet publish "RecoverySystem.CaseService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+# WORKDIR is inherited from the previous stage
+RUN dotnet publish "Recovery.CaseService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Final image
+# Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 80
-EXPOSE 443
-ENTRYPOINT ["dotnet", "RecoverySystem.CaseService.dll"]
+ENTRYPOINT ["dotnet", "Recovery.CaseService.dll"]
+
